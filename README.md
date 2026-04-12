@@ -16,9 +16,9 @@ Uncover the secrets of the time stream, its inhabitants, and more!
 
 Happy traveling! And don't let the fragile material of time fragment your being across all of time and space... 
 
-Controls:
+## Controls:
 
-A - Move left
-D - Move right
-Space - Jump
-E - time travel to the past (press again to go back to present day)
+1. A - Move left
+2. D - Move right
+3. Space - Jump
+4. E - time travel to the past (press again to go back to present day)
