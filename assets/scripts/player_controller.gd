@@ -9,6 +9,10 @@ var direction = 0
 #const SPEED = 300.0
 #const JUMP_VELOCITY = -400.0
 
+# ==================================================================================================
+# BASIC MOVEMENT FUNCTION
+# ==================================================================================================
+
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -30,23 +34,31 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 	
-	
+# ==================================================================================================
+# SWITCH SCENE FUNCTIONALITY
+# ==================================================================================================
+
 func  _process(delta):
 	if Input.is_action_just_pressed("switch_scene"):
 		switch_scene()
 
 func switch_scene():
+	
+	# Get player's position & velocity
 	GameState.player_position = global_position
 	GameState.player_velocity = velocity
 	
+	# Case 1: Scene 1 (Present) --> Scene 2 (Past)
 	if GameState.current_scene == "res://assets/scenes/areas/area_1.tscn":
 		print("Traveling to the Past!")
 		GameState.current_scene = "res://assets/scenes/areas/area_1_past.tscn"
+	# Case 2: Scene 2 (Past) --> Scene 1 (Present)
 	else:
 		print("Traveling back to the Present!")
 		GameState.current_scene = "res://assets/scenes/areas/area_1.tscn"
 	get_tree().change_scene_to_file(GameState.current_scene)
 	
 func _ready():
+	GameState.player_spawn_position = global_position # Gets player's spawn position & assigns it to global
 	global_position = GameState.player_position
 	velocity = GameState.player_velocity
