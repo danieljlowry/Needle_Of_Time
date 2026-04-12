@@ -6,8 +6,7 @@ extends CharacterBody2D
 var speed_multiplier = 30.0
 var jump_multiplier = -30.0
 var direction = 0
-#const SPEED = 300.0
-#const JUMP_VELOCITY = -400.0
+var can_switch = true # For preventing player spamming time travel switch button
 
 # ==================================================================================================
 # BASIC MOVEMENT FUNCTION
@@ -40,7 +39,29 @@ func _physics_process(delta: float) -> void:
 
 func  _process(delta):
 	if Input.is_action_just_pressed("switch_scene"):
-		switch_scene()
+		try_switch_scene()
+
+func try_switch_scene():
+	
+	if GameState.current_charge <= 0:
+		battery_death()
+		return
+		
+	GameState.current_charge -= 1
+	print("Current Charge: ", GameState.current_charge)
+	# Clamps charages between max_charges (set in GameState.gd) and 0
+	GameState.current_charge = clamp(GameState.current_charge, 0, GameState.max_charge)
+	
+	HUD.update_ui() # Note: "HUD" declared globally, that's why its able to access it
+	switch_scene()
+
+func battery_death():
+	global_position = GameState.player_spawn_position
+	velocity = Vector2.ZERO
+	
+	GameState.current_charge = GameState.max_charge
+	
+	HUD.update_ui()
 
 func switch_scene():
 	
@@ -58,6 +79,9 @@ func switch_scene():
 		GameState.current_scene = "res://assets/scenes/areas/area_1.tscn"
 	get_tree().change_scene_to_file(GameState.current_scene)
 	
+
+
+
 func _ready():
 	GameState.player_spawn_position = global_position # Gets player's spawn position & assigns it to global
 	global_position = GameState.player_position
